@@ -21,5 +21,25 @@ from sklearn.linear_model import LogisticRegression as lr
 
 
 # Your code here
+def run_logistic_regression(df_arrests):
+    features = ['pred_universe', 'num_fel_arrests_last_year']
+    X = df_arrests[features]
+    y = df_arrests['y']
 
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, shuffle=True, stratify=y)
 
+    param_grid = {'C':[0.01, 0.1, 1, 10, 100]}
+
+    lr_model = lr()
+
+    gs_cv = GridSearchCV(lr_model, param_grid, cv=5)
+
+    gs_cv.fit(X_train, y_train)
+
+    best_C = gs_cv.best_params_['C']
+    print(f'The most optimal C value: {best_C}')
+
+    df_arrests_tests = df_arrests.iloc[X_test.index]
+    df_arrests_tests['pred_lr'] = gs_cv.predict(X_test)
+
+    return df_arrests_tests

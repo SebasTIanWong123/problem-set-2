@@ -43,3 +43,10 @@ def calibration_plot(y_true, y_prob, n_bins=10):
     plt.title("Calibration Plot")
     plt.legend(loc="best")
     plt.show()
+
+def run_calibraton_plot(df_arrests_tests):
+    y_true = df_arrests_tests['y']
+
+    calibration_plot(y_true, df_arrests_tests['pred_lr'], n_bins=5)
+
+    calibration_plot(y_true, df_arrests_tests['pred_dt'], n_bins=5)

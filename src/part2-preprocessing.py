@@ -17,10 +17,35 @@ PART 2: Pre-processing
 '''
 
 # import the necessary packages
-
-
-
+import pandas as pd
 # Your code here
+def preprocess():
+    pred_universe = pd.read_csv('data/pred_universe_raw.csv')
+    arrest_events = pd.read_csv('data/arrest_even ts_raw.csv')
+
+    df_arrests = pd.merge(pred_universe, arrest_events, on='person_id', hpw='outer')
+
+    df_arrests['y'] = df_arrests.apply(lambda row: check_felony_arrest(row), axis=1)
+
+    felony_share = df_arrests['y'].mean()
+    print(f"The share of arrestees in 'df_arrests' table were rearrested for felony crime for upcoming year? {felony_share}")
+
+    df_arrests['current_charge_felony'] = (df_arrests['charge_type'] == 'Felony'.astype(int))
+
+    felony_current_share = df_arrests['current_charge_felony'].mean()
+    print(f"What share of charges are felonies?{felony_current_share}")
+
+    df_arrests['num_fel_arrests_last_year'] = df_arrests.apply(lambda row: count_felony_arrests_last_year(row), axis=1)
+
+    average_felonies_arrests_last_year = df_arrests['num_fel_last_year'].mean()
+    print(f'What is the average number of felonies last year? {average_felonies_arrests_last_year}')
+
+    return df_arrests
+
+def check_felony_arrest(row):
+    pass
+def count_felony_arrests_last_year(row):
+    pass
 
 
 
